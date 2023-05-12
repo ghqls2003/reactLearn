@@ -15,6 +15,11 @@ function App() {
     fontSize: 24,
     padding: '1rem'
   }
+  const users = [
+    {id : 1, userName : 'ryong', email : "ghqls2003@naver.com"},
+    {id : 2, userName : 'jinju', email : "jinju1991@naver.com"},
+    {id : 3, userName : 'ilc', email : 'ILikeCold@naver.com'}
+  ];
  
   return (
     <div>
@@ -30,7 +35,8 @@ function App() {
         <InputSample2 />
       </Wrapper>
       <Wrapper>
-        <UserList />
+        {/* <UserList /> */}
+        <UserList users={users} />
       </Wrapper>
     </div>
   );
