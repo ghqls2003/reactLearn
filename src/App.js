@@ -4,6 +4,8 @@ import './App.css';
 import Wrapper from './Wrapper';
 import Counter from './Counter';
 import InputSample from './InputSample';
+import InputSample2 from './InputSample2';
+import UserList from './UserList';
 
 function App() {
   const name = '추운게좋아요';
@@ -23,7 +25,13 @@ function App() {
         <div className='gray-box'></div>
         <Counter />
       </Wrapper>
-      <InputSample />
+      <Wrapper>
+        <InputSample />
+        <InputSample2 />
+      </Wrapper>
+      <Wrapper>
+        <UserList />
+      </Wrapper>
     </div>
   );
 }
