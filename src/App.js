@@ -7,12 +7,9 @@ import InputSample from './InputSample';
 import InputSample2 from './InputSample2';
 import UserList from './UserList';
 import CreateUser from './CreateUser';
+import useInputs from './hooks/useInputs';
 
 const initialState = {
-  inputs: {
-    userName: '',
-    email: ''
-  },
   users: [
     {id : 1, userName : 'ryong', email : "ghqls2003@naver.com", active: true},
     {id : 2, userName : 'jinju', email : "jinju1991@naver.com", active: false},
@@ -22,23 +19,27 @@ const initialState = {
 
 function reducer(state, action) {
   switch(action.type) {
-    case 'CHANGE_INPUT':
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.name]: action.value
-        }
-      };
     case 'CREATE_USER':
       return {
-        inputs: initialState.inputs,
         users: state.users.concat(action.user)
+      };
+    case 'TOGGLE_USER':
+      return {
+        ...state,
+        users: state.users.map(user =>
+          user.id === action.id ? {...user, active: !user.active} : user)
+      };
+    case 'REMOVE_USER':
+      return {
+        ...state,
+        users: state.users.filter(user => user.id !== action.id)
       };
     default:
       return state;
   }
 }
+
+export const UserDispatch = React.createContext(null);
 
 function App() {
   const name = '추운게좋아요';
@@ -54,22 +55,14 @@ function App() {
     return users.filter(user => user.active).length;
   }
 
+  const [{userName, email}, onChange, onReset] = useInputs({
+    userName: '',
+    email: ''
+  });
   const [state, dispatch] = useReducer(reducer, initialState);
   const nextId = useRef(4);
 
   const { users } = state;
-  const { userName, email } = state.inputs;
-
-  const onChange = useCallback(
-    e => {
-      const {name, value} = e.target;
-      dispatch({
-        type: 'CHANGE_INPUT',
-        name,
-        value
-      });
-    }, []
-  );
 
   const onCreate = useCallback(() => {
     dispatch({
@@ -80,8 +73,11 @@ function App() {
         email
       }
     });
+    onReset();
     nextId.current +=1;
-  }, [userName, email]);
+  }, [userName, email, onReset]);
+
+  const count = useMemo(() => countActiveUsers(users), [users]);
 
   return (
     <div>
@@ -97,10 +93,11 @@ function App() {
         <InputSample2 />
       </Wrapper>
       <Wrapper>
-        {/* <UserList /> */}
-        <CreateUser userName={userName} email={email} onChange={onChange} onCreate={onCreate} />
-        <UserList users={users} />
-        <div>활성사용자 수 : 0</div>
+        <UserDispatch.Provider value={dispatch}>
+          <CreateUser userName={userName} email={email} onChange={onChange} onCreate={onCreate} />
+          <UserList users={users} />
+          <div>활성사용자 수 : {count}</div>
+        </UserDispatch.Provider>
       </Wrapper>
     </div>
   );
@@ -110,4 +107,4 @@ export default App;
 
 
 
-// 20 useReducer onToggle, onRemove 부터 작성하면 된다
+// 22 숙제 해보기 - createUser 이거

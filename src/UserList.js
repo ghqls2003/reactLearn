@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
+import {UserDispatch} from './App';
 
-const User = React.memo(function User({user, onRemove, onToggle}) {
-  useEffect(() => {
-    console.log(user);
-  });
+const User = React.memo(function User({user}) {
+  
   // useEffect(() => {
   //   console.log('user 값이 설정됨');
   //   console.log(user);
@@ -12,16 +11,26 @@ const User = React.memo(function User({user, onRemove, onToggle}) {
   //     console.log(user);
   //   };
   // }, [user]);
+
+  const dispatch = useContext(UserDispatch);
+
   return(
     <div>
-      <b style={{cursor: 'pointer', color: user.active ? 'green' : 'black'}} onClick={() => onToggle(user.id)}>{user.userName}</b>
+      <b 
+        style={{cursor: 'pointer', color: user.active ? 'green' : 'black'}}
+        onClick={() => {
+          dispatch({type: 'TOGGLE_USER', id: user.id});
+        }}>{user.userName}</b>
       <span>({user.email})</span>
-      <button onClick={() => onRemove(user.id)}>삭제</button>
+      <button 
+        onClick={() => {
+          dispatch({type: 'REMOVE_USER', id: user.id});
+        }}>삭제</button>
     </div>
   );
 });
 
-function UserList({users, onRemove, onToggle}) {
+function UserList({users}) {
   // const users = [
   //   {id : 1, userName : 'ryong', email : "ghqls2003@naver.com"},
   //   {id : 2, userName : 'jinju', email : "jinju1991@naver.com"},
@@ -36,8 +45,6 @@ function UserList({users, onRemove, onToggle}) {
         <User
           user={user}
           key={user.id}
-          onRemove={onRemove}
-          onToggle={onToggle}
         />
       ))}  
       {/* <User user={users[0]} />
