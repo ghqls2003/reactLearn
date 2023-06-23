@@ -86,9 +86,9 @@ function App() {
 
 export default App;
 
+// 생명주기 메서드는 클래스형 컴포넌트에서만 사용 할 수 있다.
 
-
-// 25부터 보기
+// 
 
 
 
